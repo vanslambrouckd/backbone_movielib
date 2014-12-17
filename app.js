@@ -3,6 +3,26 @@ http://ricostacruz.com/backbone-patterns/
 */
 var app = app || {};
 
+_.extend(Backbone.Validation.callbacks, {
+    /*
+    http://jsfiddle.net/thedersen/udXL5/
+    */
+    valid: function(view, attr, selector) {
+        var $el = view.$('[data-id=' + attr + ']');
+        $el.closest('.field').removeClass('error');
+    },
+    invalid: function(view, attr, error, selector) {
+        var $el = view.$('[data-id=' + attr + ']');
+        $el.closest('.field').addClass('error');
+
+        //hier doordoen popup
+
+        $el.popup({
+            inline: true,
+            popup: $('#tplValidationPopup')
+        });
+    }
+});
 
 //model
 app.Movie = Backbone.Model.extend({
@@ -13,6 +33,15 @@ app.Movie = Backbone.Model.extend({
         summary: '',
         coverImage: 'http://ia.media-imdb.com/images/M/MV5BMjQzODQyMzk2Nl5BMl5BanBnXkFtZTcwNTg4MjQ3OA@@._V1_SX214_AL_.jpg',
         youtubeTrailer: ''
+    },
+    validation: {
+        title: {
+            required: true,
+            msg: 'The title Title is required'
+        },
+        year: {
+            range: [1900, 2050]
+        }
     }
 });
 
@@ -84,6 +113,8 @@ app.addMovieView = Backbone.View.extend({
     },
     render: function() {
         this.$el.html(this.template());
+        Backbone.Validation.bind(this);
+
         return this;
     },
     addMovie: function(event) {
@@ -97,8 +128,22 @@ app.addMovieView = Backbone.View.extend({
                 formData[dataId] = $el.val();
             }
         });
-        //console.log(formData);
-        this.collection.create(formData);
+
+        //var movie = new app.Movie(formData);
+
+        this.model.set(formData);
+        console.log(this.model);
+        if (this.model.isValid(true)) {
+            alert('ja');
+            //console.log(formData);
+            this.collection.create(formData);
+
+            this.$el.find('[data-id]').each(function(i, el) {
+                $(el).val('');
+            });
+        } else {
+            console.log('invalid');
+        }
     }
 });
 
@@ -110,7 +155,7 @@ app.GenresView = Backbone.View.extend({
         this.genres = options.genres;
         this.render();
 
-        this.listenTo(this.collection, 'change', this.render);
+        this.listenTo(this.collection, 'all', this.render);
     },
     render: function() {
         var html = '';
@@ -176,7 +221,8 @@ $(function() {
     });
 
     var frmAddMovieView = new app.addMovieView({
-        collection: app.movies
+        collection: app.movies,
+        model: new app.Movie()
     });
     $('#content').prepend(frmAddMovieView.render().el);
 

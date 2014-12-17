@@ -26,7 +26,8 @@
     "jquery": "1.11.1",
     "backbone": "~1.1.2",
     "backbone.localStorage": "~1.1.14",
-    "semantic-ui": "~1.2.0"
+    "semantic-ui": "~1.2.0",
+    "backbone-validation": "~0.9.1"
   },
   "resolutions": {
     "backbone": "~1.1.2"
