@@ -73,8 +73,19 @@ app.ListItemView = Backbone.View.extend({
         return this;
     },
     deleteItem: function(event) {
-        this.model.destroy();
-        this.remove(); //Removes a view from the DOM, and calls stopListening to remove any bound events that the view has listenTo'd. 
+        var that = this;
+        $('#modalDelete')
+          .modal({
+            closable  : false,
+            onDeny    : function(){
+              //return false; prevents dialog from closing
+            },
+            onApprove : function() {
+                that.model.destroy();
+                that.remove(); //Removes a view from the DOM, and calls stopListening to remove any bound events that the view has listenTo'd.        
+            }
+          })
+          .modal('show');
     }
 });
 
@@ -205,7 +216,6 @@ app.GenresView = Backbone.View.extend({
 
 
 $(function() {
-
     var genres = ['Action', 'Comedy', 'Drama', 'Adventure'];
     genres.sort(function(a, b) {
         if (a < b) return -1;
