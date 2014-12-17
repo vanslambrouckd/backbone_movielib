@@ -27,7 +27,8 @@
     "backbone": "~1.1.2",
     "backbone.localStorage": "~1.1.14",
     "semantic-ui": "~1.2.0",
-    "backbone-validation": "~0.9.1"
+    "backbone-validation": "~0.9.1",
+    "backbone.stickit": "~0.8.0"
   },
   "resolutions": {
     "backbone": "~1.1.2"

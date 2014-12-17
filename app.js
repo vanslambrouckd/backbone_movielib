@@ -4,9 +4,7 @@ http://ricostacruz.com/backbone-patterns/
 var app = app || {};
 
 _.extend(Backbone.Validation.callbacks, {
-    /*
-    http://jsfiddle.net/thedersen/udXL5/
-    */
+    //http://jsfiddle.net/thedersen/udXL5/
    
     _clearErrors: function(view, attr) {
         var $el = view.$('[data-id=' + attr + ']');
@@ -21,7 +19,6 @@ _.extend(Backbone.Validation.callbacks, {
     invalid: function(view, attr, error, selector) {
         this._clearErrors(view, attr);
 
-
         var $el = view.$('[data-id=' + attr + ']');
         var $field = $el.closest('.field');
 
@@ -29,6 +26,7 @@ _.extend(Backbone.Validation.callbacks, {
         $field.append('<div class="ui red pointing prompt label transition visible">'+error+'</div>');
     }
 });
+
 
 //model
 app.Movie = Backbone.Model.extend({
@@ -111,16 +109,17 @@ app.addMovieView = Backbone.View.extend({
     id: '#frmAddMovie',
     className: 'ui form segment',
     events: {
-        'click #addMovie': 'addMovie'
+        'click #addMovie': 'addMovie',
+        'blur input': 'checkModel'
     },
     template: _.template($('#tplAddMovie').html()),
     initialize: function() {
         this.render();
+        return this;
     },
     render: function() {
         this.$el.html(this.template());
         Backbone.Validation.bind(this);
-
         return this;
     },
     addMovie: function(event) {
@@ -135,21 +134,45 @@ app.addMovieView = Backbone.View.extend({
             }
         });
 
-        //var movie = new app.Movie(formData);
-
         this.model.set(formData);
-        console.log(this.model);
         if (this.model.isValid(true)) {
-            alert('ja');
-            //console.log(formData);
             this.collection.create(formData);
 
             this.$el.find('[data-id]').each(function(i, el) {
                 $(el).val('');
             });
-        } else {
-            console.log('invalid');
         }
+    },
+    _clearErrors: function($el) {
+        var $field = $el.closest('.field');
+        $field.removeClass('error');
+        $field.find('.prompt').remove();
+    },
+    valid: function($el) {
+        this._clearErrors($el);
+    },
+    invalid: function($el, error) {
+        this._clearErrors($el);
+        var $field = $el.closest('.field');
+        $field.addClass('error');
+        $field.append('<div class="ui red pointing prompt label transition visible">'+error+'</div>');
+    },
+    checkModel: function(event) {
+        console.clear();
+        /* check if model is valid */
+        var $el = $(event.target);
+        var dataId = $el.attr('data-id');
+
+        var error = this.model.preValidate(dataId, $el.val());
+        if (error) {
+            this.invalid($el, error);
+        } else {
+            this.valid($el);
+        }
+
+        //this.model.set(dataId, $el.val(), {validate:true});
+        console.log(dataId, $el.val());
+        //console.log(this.model.attributes);
     }
 });
 
