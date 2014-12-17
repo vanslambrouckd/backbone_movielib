@@ -214,8 +214,77 @@ app.GenresView = Backbone.View.extend({
     }
 });
 
+/*
+http://jsfiddle.net/parsa28/GxQaw/
+http://parsabg.com/post/55425637417/a-simple-rss-reader-with-backbone-js-in-40
+*/
+
+var RssItem = Backbone.Model.extend({
+
+});
+
+var RssItemView = Backbone.View.extend({
+    template: _.template($('#tplRssItemView').html()),
+    initialize: function() {
+        this.render();
+    },
+    render: function() {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+
+var RssFeed = Backbone.Collection.extend({
+    model: RssItem
+});
+
+var RssListView = Backbone.View.extend({
+    el: '#rsslist',
+    _loadFeed: function(url) {
+        var ajaxFeed = $.ajax({
+            type: 'GET',
+            cache: false,
+            url: 'https://ajax.googleapis.com/ajax/services/feed/load?v=1.0',
+            data: {
+                q: url
+            },
+            dataType: "jsonp"
+        }); 
+
+        return ajaxFeed;
+    },
+    initialize: function(url) {
+        //console.log(this.$el);
+        var that = this;
+        this._loadFeed(url).then(function(data) {
+            _.each(data.responseData.feed.entries, function(entry) {
+                console.log(entry);
+                /*
+                var rssItem = new RssItem({
+                    title: entry.title,
+                    contentSnippet: entry.contentSnippet
+                });
+                */
+               var rssItem = new RssItem(entry);
+                console.log('rssItem', rssItem.attributes);
+                var rssItemView = new RssItemView({ model: rssItem });
+                console.log(rssItemView);
+                that.$el.append(rssItemView.render().el);
+            });
+            console.log(data);
+        });
+        this.render();
+    },
+    render: function() {
+
+    }
+});
 
 $(function() {
+
+    //var rssList = new RssListView('http://feeds.bbci.co.uk/news/world/rss.xml?edition=uk');
+    var rssList = new RssListView('http://www.cinemablend.com/rss.php');
+
     var genres = ['Action', 'Comedy', 'Drama', 'Adventure'];
     genres.sort(function(a, b) {
         if (a < b) return -1;

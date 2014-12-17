@@ -14,14 +14,14 @@
 </head>
 <body>
 	<div class="ui page grid">
-		<div class="row" id="header">
-			
+		<div class="row" id="header">			
 		</div>
 		<div class="row">
-			<div class="four wide column" id="leftCol">
-				
+			<div class="four wide column" id="leftCol">				
 			</div>
 			<div class="twelve wide column" id="content">
+				<div id="rsslist">
+				</div>
 				<div class="ui items" id="movieslist">
 				</div>
 			</div>
@@ -39,6 +39,9 @@
 			  </a>
 			  <a class="item">
 			    <i class="mail icon"></i> Messages
+			  </a>
+			  <a class="item">
+			    <i class="film icon"></i> Movie news (rss)
 			  </a>
 			  <div class="right menu">
 			    <div class="item">
@@ -126,6 +129,13 @@
 		    </div>
 		  </div>
 		</div>
+	</script>
+
+	<script type="text/template" id="tplRssItemView">
+		<%= title %>
+		<%= publishedDate %>
+		<%= contentSnippet %>
+		<a href="<%= link %>" target="_blank">Read more...</a>
 	</script>
 
 	<div class="ui modal" id="modalDelete">
