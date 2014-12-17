@@ -1,0 +1,34 @@
+{
+  "name": "backbone_movielib",
+  "version": "0.0.0",
+  "homepage": "https://github.com/vanslambrouckd/backbone_movielib",
+  "authors": [
+    "David Vanslambrouck"
+  ],
+  "description": "backbone test",
+  "main": "index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "backbone",
+    "movie"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.11.1",
+    "backbone": "~1.1.2",
+    "backbone.localStorage": "~1.1.14",
+    "semantic-ui": "~1.2.0"
+  },
+  "resolutions": {
+    "backbone": "~1.1.2"
+  }
+}
