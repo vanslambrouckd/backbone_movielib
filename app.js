@@ -1,5 +1,6 @@
 var app = app || {};
 
+
 //model
 app.Movie = Backbone.Model.extend({
     defaults: {
@@ -7,44 +8,55 @@ app.Movie = Backbone.Model.extend({
         genre: '',
         year: '',
         summary: '',
-        coverImage: 'http://ia.media-imdb.com/images/M/MV5BMjQzODQyMzk2Nl5BMl5BanBnXkFtZTcwNTg4MjQ3OA@@._V1_SX214_AL_.jpg'
+        coverImage: 'http://ia.media-imdb.com/images/M/MV5BMjQzODQyMzk2Nl5BMl5BanBnXkFtZTcwNTg4MjQ3OA@@._V1_SX214_AL_.jpg',
+        youtubeTrailer: ''
     }
 });
 
 //collection
 app.Movies = Backbone.Collection.extend({
-    model: app.Movie
+    model: app.Movie,
+    localStorage: new Backbone.LocalStorage('movies-backbone')
 })
 
 //listitemview
 app.ListItemView = Backbone.View.extend({
+    events: {
+        'click .jsDelete': 'deleteItem'
+    },
     tagName: 'div',
     className: 'item',
     template: _.template($('#tplListItemView').html()),
     render: function() {
         this.$el.html(this.template(this.model.attributes));
         return this;
+    },
+    deleteItem: function(event) {
+        this.model.destroy();
+        this.remove(); //Removes a view from the DOM, and calls stopListening to remove any bound events that the view has listenTo'd. 
     }
 });
 
 //listview
 app.ListView = Backbone.View.extend({
     el: '#movieslist',
-    initialize: function(initialMovies) {
-        this.collection = new app.Movies(initialMovies);
+    initialize: function() {
+        //this.collection = new app.Movies(initialMovies);
+        this.collection.fetch(); //fetch collection van server, nodig anders zie je de collectie niet
         this.render();
+        this.listenTo(this.collection, 'add', this.renderMovie);
+        //this.listenTo(this.collection, 'reset', this.render);
     },
     render: function() {
+        console.log(this.collection);
         this.collection.each(function(item) {
             this.renderMovie(item);
         }, this);
     },
     renderMovie: function(item) {
-        console.log(item);
         var movieView = new app.ListItemView({
             model: item
         });
-        console.log(movieView.render().el);
         this.$el.append(movieView.render().el);
     }
 });
@@ -68,13 +80,18 @@ app.addMovieView = Backbone.View.extend({
         return this;
     },
     addMovie: function(event) {
-        alert('ja');
         event.preventDefault();
         var formData = {};
 
-        this.$el.find('input').each(function(i, el) {
-            console.log(el);
+        this.$el.find('[data-id]').each(function(i, el) {
+            var $el = $(el);
+            var dataId = $el.attr('data-id');
+            if (dataId) {
+                formData[dataId] = $el.val();
+            }
         });
+        console.log(formData);
+        this.collection.create(formData);
     }
 });
 
@@ -104,15 +121,22 @@ $(function() {
         year: 1994,
         summary: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
         coverImage: 'http://ia.media-imdb.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1_SX214_AL_.jpg'
-
     });
 
+    //app.movies = new app.Movies(movies);
+    app.movies = new app.Movies();
+    console.log(app.movies);
 
-    $('#leftCol').html($('#tplLeftMenu').html());
 
-    new app.ListView(movies);
+    $('#leftCol').html($('#tplCategories').html());
 
-    var frmAddMovieView = new app.addMovieView();
+    var listView = new app.ListView({
+        collection: app.movies
+    });
+
+    var frmAddMovieView = new app.addMovieView({
+        collection: app.movies
+    });
     console.log(frmAddMovieView.render().el);
     $('#content').prepend(frmAddMovieView.render().el);
 

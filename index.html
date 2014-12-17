@@ -45,7 +45,7 @@
 		</div>
 	</div>
 
-	<script type="text/template" id="tplLeftMenu">
+	<script type="text/template" id="tplCategories">
 		<div class="sixteen wide column">
 			<div class="ui menu">
 			  <a class="active item">
@@ -79,12 +79,9 @@
 			<div class="description">
 				<%= summary %>
 			</div>
-			<!--
 			<div class="extra">
-				<div class="ui label">Action</div>
-				<div class="ui label">Adventure</div>
+				<div class="ui right floated icon button jsDelete"><i class="icon trash"></i></div>
 			</div>
-			-->
 		</div>
 	</script>
 
@@ -92,7 +89,7 @@
 	<h4 class="ui dividing header">Add movie</h4>
 	<div class="required field">
 		<label>Title</label>
-		<input type="text" />
+		<input type="text" data-id="title" />
 	</div>
 	  <div class="field">
 		
@@ -100,18 +97,18 @@
 	<div class="two required fields">
 		<div class="field">
 			<label>Genre</label>
-    		<select class="ui search dropdown" id="ddlGenres">
+    		<select class="ui search dropdown" id="ddlGenres" data-id="genre">
 			</select>
 		</div>
 		<div class="field">
 			<label>Year</label>
-			<input type="text" />
+			<input type="text" data-id="year" />
 		</div>
 	</div>
 	
 	<div class="field">
 		<label>Summary</label>
-		<textarea></textarea>
+		<textarea data-id="summary"></textarea>
 	</div>
 	<div class="field">
 		<label>Cover Image</label>
@@ -119,7 +116,7 @@
 	</div>
 	<div class="field">
 		<label>Youtub trailer</label>
-		<input type="text" placeholder="http://youtu.be/lAHwtABg8UE" />
+		<input type="text" placeholder="http://youtu.be/lAHwtABg8UE" data-id="youtube_trailer" />
 	</div>
 	
 	<div class="ui submit button" id="addMovie">Submit</div>
