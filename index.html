@@ -12,28 +12,8 @@
 </head>
 <body>
 	<div class="ui page grid">
-		<div class="row">
-			<div class="sixteen wide column">
-				<div class="ui menu">
-				  <a class="active item">
-				    <i class="home icon"></i> Home
-				  </a>
-				  <a class="item">
-				    <i class="film icon"></i> Movies
-				  </a>
-				  <a class="item">
-				    <i class="mail icon"></i> Messages
-				  </a>
-				  <div class="right menu">
-				    <div class="item">
-				      <div class="ui transparent icon input">
-				        <input placeholder="Search..." type="text">
-				        <i class="search link icon"></i>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-			</div>
+		<div class="row" id="leftCol">
+			
 		</div>
 		<div class="row">
 			<div class="four wide column">
@@ -65,6 +45,30 @@
 		</div>
 	</div>
 
+	<script type="text/template" id="tplLeftMenu">
+		<div class="sixteen wide column">
+			<div class="ui menu">
+			  <a class="active item">
+			    <i class="home icon"></i> Home
+			  </a>
+			  <a class="item">
+			    <i class="film icon"></i> Movies
+			  </a>
+			  <a class="item">
+			    <i class="mail icon"></i> Messages
+			  </a>
+			  <div class="right menu">
+			    <div class="item">
+			      <div class="ui transparent icon input">
+			        <input placeholder="Search..." type="text">
+			        <i class="search link icon"></i>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</div>
+	</script>
+
 	<script type="text/template" id="tplListItemView">
 		<div class="image">
 			<img src="<%= coverImage %>" alt="" />
@@ -85,44 +89,40 @@
 	</script>
 
 	<script type="text/template" id="tplAddMovie">
-	<div class="ui form segment">
-		<h4 class="ui dividing header">Add movie</h4>
-		<div class="required field">
-			<label>Title</label>
+	<h4 class="ui dividing header">Add movie</h4>
+	<div class="required field">
+		<label>Title</label>
+		<input type="text" />
+	</div>
+	  <div class="field">
+		
+	</div>
+	<div class="two required fields">
+		<div class="field">
+			<label>Genre</label>
+    		<select class="ui search dropdown" id="ddlGenres">
+			</select>
+		</div>
+		<div class="field">
+			<label>Year</label>
 			<input type="text" />
 		</div>
-		  <div class="field">
-    		
-		</div>
-		<div class="two required fields">
-			<div class="field">
-				<label>Genre</label>
-	    		<select class="ui search dropdown" id="ddlGenres">
-					<option value="comedy">Comedy</option>
-					<option value="action">action</option>
-				</select>
-			</div>
-			<div class="field">
-				<label>Year</label>
-				<input type="text" />
-			</div>
-		</div>
-		
-		<div class="field">
-			<label>Summary</label>
-			<textarea></textarea>
-		</div>
-		<div class="field">
-			<label>Cover Image</label>
-			<input type="file" />
-		</div>
-		<div class="field">
-			<label>Youtub trailer</label>
-			<input type="text" placeholder="http://youtu.be/lAHwtABg8UE" />
-		</div>
-		
-		<div class="ui submit button">Submit</div>
 	</div>
+	
+	<div class="field">
+		<label>Summary</label>
+		<textarea></textarea>
+	</div>
+	<div class="field">
+		<label>Cover Image</label>
+		<input type="file" />
+	</div>
+	<div class="field">
+		<label>Youtub trailer</label>
+		<input type="text" placeholder="http://youtu.be/lAHwtABg8UE" />
+	</div>
+	
+	<div class="ui submit button" id="addMovie">Submit</div>
 	</script>
 
 	<script type="text/javascript" src="app.js"></script>
