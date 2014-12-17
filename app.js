@@ -1,3 +1,6 @@
+/*
+http://ricostacruz.com/backbone-patterns/
+*/
 var app = app || {};
 
 
@@ -16,8 +19,13 @@ app.Movie = Backbone.Model.extend({
 //collection
 app.Movies = Backbone.Collection.extend({
     model: app.Movie,
-    localStorage: new Backbone.LocalStorage('movies-backbone')
-})
+    localStorage: new Backbone.LocalStorage('movies-backbone'),
+    findByGenre: function(genre) {
+        return this.models.filter(function(movie) {
+            return movie.get('genre') == genre;
+        });
+    }
+});
 
 //listitemview
 app.ListItemView = Backbone.View.extend({
@@ -48,7 +56,6 @@ app.ListView = Backbone.View.extend({
         //this.listenTo(this.collection, 'reset', this.render);
     },
     render: function() {
-        console.log(this.collection);
         this.collection.each(function(item) {
             this.renderMovie(item);
         }, this);
@@ -90,8 +97,35 @@ app.addMovieView = Backbone.View.extend({
                 formData[dataId] = $el.val();
             }
         });
-        console.log(formData);
+        //console.log(formData);
         this.collection.create(formData);
+    }
+});
+
+app.GenresView = Backbone.View.extend({
+    el: '#genresView',
+    genres: [],
+    initialize: function(options) {
+        this.collection = options.collection;
+        this.genres = options.genres;
+        this.render();
+
+        this.listenTo(this.collection, 'change', this.render);
+    },
+    render: function() {
+        var html = '';
+
+        this.genres.forEach(function(item) {
+            var length = this.collection.findByGenre(item).length;
+            /*
+            this.$el.append(
+                '<a class="item">' + item + ' <div class="ui label">' + length + '</div></a>'
+            );
+			*/
+            html += '<a class="item">' + item + ' <div class="ui label">' + length + '</div></a>';
+        }, this);
+
+        this.$el.html(html);
     }
 });
 
@@ -104,7 +138,7 @@ $(function() {
         if (b < a) return 1;
         return 0;
     });
-    console.log(genres);
+
     var movies = [];
     movies.push({
         title: 'Jurassic Park',
@@ -125,10 +159,17 @@ $(function() {
 
     //app.movies = new app.Movies(movies);
     app.movies = new app.Movies();
-    console.log(app.movies);
 
+    app.movies.fetch();
 
-    $('#leftCol').html($('#tplCategories').html());
+    $('#leftCol').append($('#tplGenresView').html());
+
+    var genresView = new app.GenresView({
+        collection: app.movies,
+        genres: genres
+    });
+
+    $('#header').html($('#tplHeader').html());
 
     var listView = new app.ListView({
         collection: app.movies
@@ -137,7 +178,6 @@ $(function() {
     var frmAddMovieView = new app.addMovieView({
         collection: app.movies
     });
-    console.log(frmAddMovieView.render().el);
     $('#content').prepend(frmAddMovieView.render().el);
 
     _.each(genres, function(genre) {

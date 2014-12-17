@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Backbone movie lib</title>
+	<title>Library</title>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/underscore/underscore-min.js"></script>
 	<script src="bower_components/backbone/backbone.js"></script>
@@ -12,31 +12,12 @@
 </head>
 <body>
 	<div class="ui page grid">
-		<div class="row" id="leftCol">
+		<div class="row" id="header">
 			
 		</div>
 		<div class="row">
-			<div class="four wide column">
-				<div class="ui vertical menu">
-				  <a class="active teal item">
-				    Inbox
-				    <div class="ui teal label">1</div>
-				  </a>
-				  <a class="item">
-				    Spam
-				    <div class="ui label">51</div>
-				  </a>
-				  <a class="item">
-				    Updates
-				    <div class="ui label">1</div>
-				  </a>
-				  <div class="item">
-				    <div class="ui transparent icon input">
-				      <input placeholder="Search movies..." type="text">
-				      <i class="search icon"></i>
-				    </div>
-				  </div>
-				</div>
+			<div class="four wide column" id="leftCol">
+				
 			</div>
 			<div class="twelve wide column" id="content">
 				<div class="ui items" id="movieslist">
@@ -45,7 +26,7 @@
 		</div>
 	</div>
 
-	<script type="text/template" id="tplCategories">
+	<script type="text/template" id="tplHeader">
 		<div class="sixteen wide column">
 			<div class="ui menu">
 			  <a class="active item">
@@ -120,6 +101,29 @@
 	</div>
 	
 	<div class="ui submit button" id="addMovie">Submit</div>
+	</script>
+
+	<script type="text/template" id="tplGenresView">
+		<div class="ui vertical menu" id="genresView">
+		  <a class="active teal item">
+		    Inbox
+		    <div class="ui teal label">1</div>
+		  </a>
+		  <a class="item">
+		    Spam
+		    <div class="ui label">51</div>
+		  </a>
+		  <a class="item">
+		    Updates
+		    <div class="ui label">1</div>
+		  </a>
+		  <div class="item">
+		    <div class="ui transparent icon input">
+		      <input placeholder="Search movies..." type="text">
+		      <i class="search icon"></i>
+		    </div>
+		  </div>
+		</div>
 	</script>
 
 	<script type="text/javascript" src="app.js"></script>
