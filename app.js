@@ -7,20 +7,26 @@ _.extend(Backbone.Validation.callbacks, {
     /*
     http://jsfiddle.net/thedersen/udXL5/
     */
-    valid: function(view, attr, selector) {
+   
+    _clearErrors: function(view, attr) {
         var $el = view.$('[data-id=' + attr + ']');
-        $el.closest('.field').removeClass('error');
+        var $field = $el.closest('.field');
+        $field.removeClass('error');
+        console.log('prompt', $field.find('.prompt'));
+        $field.find('.prompt').remove();
+    },
+    valid: function(view, attr, selector) {
+        this._clearErrors(view, attr);
     },
     invalid: function(view, attr, error, selector) {
+        this._clearErrors(view, attr);
+
+
         var $el = view.$('[data-id=' + attr + ']');
-        $el.closest('.field').addClass('error');
+        var $field = $el.closest('.field');
 
-        //hier doordoen popup
-
-        $el.popup({
-            inline: true,
-            popup: $('#tplValidationPopup')
-        });
+        $field.addClass('error');
+        $field.append('<div class="ui red pointing prompt label transition visible">'+error+'</div>');
     }
 });
 
